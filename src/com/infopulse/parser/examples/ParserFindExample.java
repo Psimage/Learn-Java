@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import com.infopulse.parser.Parser;
-import com.infopulse.parser.rules.FindRabinKarp;
+import com.infopulse.parser.rules.*;
 
 public class ParserFindExample {
 
@@ -18,7 +18,7 @@ public class ParserFindExample {
 		System.out.print("Add Some Text: ");
 		inLine = console.readLine();
 
-		parser.add(new FindRabinKarp("Hello"));
+		parser.add(new FindMKP("HeHeLHlHeH"));
 		result = parser.Parse(inLine);
 
 		if(result != null)

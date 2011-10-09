@@ -1,5 +1,27 @@
-Hello World!
+=================== Hello World ======================
 This is my first Git Repository.
 Its only for educational purposes!
 
 GL & HF.
+
+======================================================
+================ External Libraries ==================
+1. Java 1.7 SE
+2. Apache commons lang 3
+
+======================================================
+==================== How to install ==================
+1. Checkout master branch
+2. Import this module into IDEA
+3. Add external libraries
+4. Compile
+5. ????
+6. Profit!
+
+======================================================
+==================== How to use ======================
+1. Create instance of a class Parser.
+2. Add rules (classes with implemented interface Rule)
+   and add them to your Parser instance (add(..))
+3. Use method parse(..) to get String representation
+   of the result

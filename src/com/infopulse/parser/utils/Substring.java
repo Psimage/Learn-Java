@@ -2,18 +2,21 @@ package com.infopulse.parser.utils;
 
 public class Substring {
 
-    public static int findMKP(char[] str, char[] subStr) {
+    public static int findMKP(char[] str, char[] subStr, int beginIndex) {
         int[] prf = prefixMKP(subStr);
 
-        for (int j = 0, i = 0; i < str.length; ++i){
-                while ((j>0) && (subStr[j] != str[i]))
-                        j = prf[j-1];
+        for (int j = 0, i = beginIndex; i < str.length; ++i){
+            while ((j>0) && (subStr[j] != str[i])) {
+                j = prf[j-1];
+            }
 
-                if (subStr[j] == str[i])
-                        j++;
+            if (subStr[j] == str[i]) {
+                j++;
+            }
 
-                if (j==subStr.length)
-                        return (i-subStr.length+1);
+            if (j==subStr.length) {
+                return (i-subStr.length+1);
+            }
         }
 
         return -1;

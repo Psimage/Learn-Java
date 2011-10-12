@@ -1,6 +1,7 @@
 package com.infopulse.parser.rules;
 
 import com.infopulse.parser.utils.Substring;
+import sun.org.mozilla.javascript.internal.regexp.SubString;
 
 public class FindMKP extends FindRule {
 
@@ -11,10 +12,14 @@ public class FindMKP extends FindRule {
     @Override
     public String performRule(String inString) {
         String result = null;
+        int i = 0;
 
-        int i = Substring.findMKP(inString.toCharArray(), getSubString().toCharArray());
-        if(i != -1) {
-            result = String.valueOf(i);
+        while(true) {
+            i = Substring.findMKP(inString.toCharArray(), getSubString().toCharArray(), i);
+            if(i == -1) break;
+            if(result == null) result = "";
+            result += inString.substring(i, i + getSubString().length()) + "-";
+            i++;
         }
 
         return result;

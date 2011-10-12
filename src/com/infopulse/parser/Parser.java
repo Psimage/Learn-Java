@@ -1,67 +1,85 @@
 package com.infopulse.parser;
 
 import java.util.ArrayList;
-import com.infopulse.parser.operators.Operation;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.infopulse.parser.rules.Rule;
 import com.infopulse.parser.utils.Tree;
 
 public class Parser {
-	private Tree<?> tree = new Tree<Object>();
-	private String	parseStr;
+	private Tree<Object> root = new Tree<Object>();
+//    private HashMap<String, Boolean> booleanMap = new HashMap<String, Boolean>();
+    private HashMap<String, String> resultMap = new HashMap<String, String>();
 
-	public <T> Tree<?> add(T node, Tree<?> localTree) {
-		Tree<T> newTree = new Tree<T>();
-		newTree.setValue(node);
+    public final RuleNode addRule(Rule rule, String ruleID) {
+        Tree<Object> tree = new Tree<Object>();
 
-		if(localTree == null) {
-			tree.addSubTree(newTree);
-		} else {
-			localTree.addSubTree(newTree);
-		}
-		return newTree;
-	}
+        tree.setValue(new RuleItem(rule, ruleID));
+        root.addSubTree(tree);
 
-	public <T> Tree<?> add(T node) {
-		Tree<T> newTree = new Tree<T>();
-		newTree.setValue(node);
-		tree.addSubTree(newTree);
+        return new RuleNode(tree);
+    }
 
-		return newTree;
-	}
-/*
-	public String Parse(String str, Rule rule) {
-		if(str!=null && rule!=null && str.length()>0)
-			return rule.perfomRule(str);
+    public final RuleNode addRule(Rule rule, String ruleID, RuleNode node) {
+        Tree<Object> tree = new Tree<Object>();
 
-		System.out.println("Bad things happened in Parser :(");
-		return null;
-	}
-*/
-	public String Parse(String str) {
-		if(str!=null && str.length()>0) {
-			parseStr = str;
-			return performTree(tree.subTrees.get(0));
-		}
+        tree.setValue(new RuleItem(rule, ruleID));
+        node.getTree().addSubTree(tree);
 
-		return null;
-	}
+        return new RuleNode(tree);
+    }
 
-	private String performTree(Tree<?> localTree) {
-		ArrayList<String> strs = new ArrayList<String>();
+    public Map<String, String> Parse(String str) {
+        if(str!=null && str.length()>0) {
+            ArrayList<Tree<Object>> list = new ArrayList<Tree<Object>>();
+            root.setValue(str);
+            list.add(root);
+            performTree(list);
+        }
 
-		for (Tree<?> nextTree: localTree.subTrees) {
-			strs.add(
-				performTree(
-					nextTree));
-		}
+        return resultMap;
+    }
 
-		if(strs.size()>1) {
-			return ((Operation)(localTree.getValue())).
-					performOperation(strs);
-		} else if(strs.size()!=0) {
-			return ((Rule)(localTree.getValue())).performRule(strs.get(0));
-		} else {
-			return ((Rule)(localTree.getValue())).performRule(parseStr);
-		}
-	}
+    private void performTree(ArrayList<Tree<Object>> treeList) {
+        if(treeList.isEmpty()) return;
+
+        ArrayList<Tree<Object>> results = new ArrayList<Tree<Object>>();
+
+        //Перебор всех деревьев
+        for (Tree<Object> tree : treeList) {
+            ArrayList<Tree<Object>> subtreeList = tree.getSubtreeList();
+
+            //Рут каждого дерева - результат его рула
+            String inputData = (String) (tree.getValue());
+
+            if (inputData != null) {
+
+                //Перебор веток дерева
+                for (Tree<Object> subtree : subtreeList) {
+
+                    //if (condition == true)
+                        //Каждая ветка дерева - рул, который нужно выполнить
+                        String outputData = ((RuleItem) (subtree.getValue())).
+                                rule.performRule(inputData);
+
+                        //Сохраняем для теста результат каждого рула
+                        resultMap.put(((RuleItem) (subtree.getValue())).id,
+                                outputData);
+
+                        //Теперь пусть ветка дерева держит результат своего рула
+                        subtree.setValue(outputData);
+
+                        //Формируем список сдедующих деревьев
+                        results.add(subtree);
+                    //endif
+                }
+            }
+        }
+
+        //Выполнить сдедующий увовень
+        performTree(results);
+    }
+
 }
+

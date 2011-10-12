@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Tree<T> {
 	private T value;
-	public ArrayList<Tree<?>> subTrees = new ArrayList<Tree<?>>();
+	public ArrayList<Tree<T>> subTrees = new ArrayList<Tree<T>>();
 
 	public T getValue() {
 		return value;
@@ -14,9 +14,9 @@ public class Tree<T> {
 		value = newValue;
 	}
 
-	public void addSubTree(Tree<?> newSubTree) {
+	public void addSubTree(Tree<T> newSubTree) {
 		subTrees.add(newSubTree);
 	}
 
-	// TODO: implement bigger ingerface
+    public final ArrayList<Tree<T>> getSubtreeList() { return subTrees; }
 }

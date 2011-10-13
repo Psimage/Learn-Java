@@ -4,17 +4,17 @@ import com.infopulse.parser.rules.Rule;
 import com.infopulse.parser.utils.Tree;
 
 public class RuleNode {
-    Tree<Object> tree = null;
+    Tree<RuleContainer> tree = null;
 
-    RuleNode(Tree<Object> tree) {
+    RuleNode(Tree<RuleContainer> tree) {
         this.tree = tree;
     }
 
-    Tree<Object> getTree() {
+    Tree<RuleContainer> getTree() {
         return tree;
     }
 
-    void setTree(Tree<Object> tree) {
+    void setTree(Tree<RuleContainer> tree) {
         this.tree = tree;
     }
 }

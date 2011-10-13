@@ -1,8 +1,9 @@
 package com.infopulse.parser.utils;
 
-public class Substring {
+public class SearchStringAlgorithm {
 
-    public static int findMKP(char[] str, char[] subStr, int beginIndex) {
+    //Knuth-Morris-Pratt
+    public static int searchMKP(char[] str, char[] subStr, int beginIndex) {
         int[] prf = prefixMKP(subStr);
 
         for (int j = 0, i = beginIndex; i < str.length; ++i){

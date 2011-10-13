@@ -20,10 +20,10 @@ public class ParserFindExample {
 		System.out.print("Add Some Text: ");
 		inLine = console.readLine();
 
-        RuleNode node1 = parser.addRule(new FindMKP("HeHeLHlHeH"), "Rule1");
-            parser.addRule(new FindMKP("LHlHeH"), "Rule2", node1);
-            RuleNode node2 = parser.addRule(new FindMKP("lHe=="), "Rule999", node1);
-                parser.addRule(new FindMKP("H"), "Rule8", node2);
+        RuleNode node1 = parser.addRule(new FindMKP("Hello"), "R1");
+            parser.addRule(new FindMKP("o"), "R2", node1);
+            RuleNode node2 = parser.addRule(new FindMKP("lHe=="), "R3", node1);
+                parser.addRule(new FindMKP("H"), "R4", node2);
 
         Map<String, String> result = parser.Parse(inLine);
 

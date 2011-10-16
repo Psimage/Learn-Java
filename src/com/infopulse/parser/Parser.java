@@ -9,7 +9,7 @@ import com.infopulse.parser.utils.Tree;
 
 public class Parser {
 	private Tree<RuleContainer> root = new Tree<RuleContainer>();
-//    private HashMap<String, Boolean> booleanMap = new HashMap<String, Boolean>();
+    private HashMap<String, Boolean> booleanMap = new HashMap<String, Boolean>();
     private HashMap<String, String> resultMap = new HashMap<String, String>();
 
     public Parser() {
@@ -17,19 +17,27 @@ public class Parser {
         root.setValue(ruleContainer);
     }
 
-    public final RuleNode addRule(Rule rule, String ruleID) {
+    public final RuleNode addRule(Rule rule, String ruleID, String strCondition) {
         Tree<RuleContainer> tree = new Tree<RuleContainer>();
+        Condition condition = null;
 
-        tree.setValue(new RuleContainer(rule, ruleID));
+        if(strCondition != null)
+            condition = new Condition(strCondition, booleanMap);
+
+        tree.setValue(new RuleContainer(rule, ruleID, condition));
         root.addSubTree(tree);
 
         return new RuleNode(tree);
     }
 
-    public final RuleNode addRule(Rule rule, String ruleID, RuleNode node) {
+    public final RuleNode addRule(Rule rule, String ruleID, RuleNode node, String strCondition) {
         Tree<RuleContainer> tree = new Tree<RuleContainer>();
+        Condition condition = null;
 
-        tree.setValue(new RuleContainer(rule, ruleID));
+        if(strCondition != null)
+            condition = new Condition(strCondition, booleanMap);
+
+        tree.setValue(new RuleContainer(rule, ruleID, condition));
         node.getTree().addSubTree(tree);
 
         return new RuleNode(tree);
@@ -63,9 +71,13 @@ public class Parser {
                 //Перебор веток дерева
                 for (Tree<RuleContainer> subtree : subtreeList) {
 
-                    //TODO: if (condition == true)
+                    if(subtree.getValue().condition == null || subtree.getValue().condition.getResult()) {
+
                         //Каждая ветка дерева - рул, который нужно выполнить
                         String outputData = subtree.getValue().rule.performRule(inputData);
+
+                        if(outputData != null)
+                            booleanMap.put(subtree.getValue().id, true);
 
                         //Сохраняем для теста результат каждого рула
                         resultMap.put(subtree.getValue().id, outputData);
@@ -75,7 +87,7 @@ public class Parser {
 
                         //Формируем список сдедующих деревьев
                         results.add(subtree);
-                    //endif
+                    }
                 }
             }
         }

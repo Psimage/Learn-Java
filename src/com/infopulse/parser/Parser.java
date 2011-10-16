@@ -67,23 +67,27 @@ public class Parser {
             String inputData = tree.getValue().result;
 
             if (inputData != null) {
+                ArrayList<Tree<RuleContainer>> conditionalTrees = new ArrayList<Tree<RuleContainer>>();
 
-                //Перебор веток дерева
+                //Перебор веток дерева без условий выполнения
                 for (Tree<RuleContainer> subtree : subtreeList) {
 
-                    if(subtree.getValue().condition == null || subtree.getValue().condition.getResult()) {
+                    if(subtree.getValue().condition == null) {
+                        executeRule(subtree, inputData);
 
-                        //Каждая ветка дерева - рул, который нужно выполнить
-                        String outputData = subtree.getValue().rule.performRule(inputData);
+                        //Формируем список сдедующих деревьев
+                        results.add(subtree);
+                    }
+                    else {
+                        conditionalTrees.add(subtree);
+                    }
+                }
 
-                        if(outputData != null)
-                            booleanMap.put(subtree.getValue().id, true);
-
-                        //Сохраняем для теста результат каждого рула
-                        resultMap.put(subtree.getValue().id, outputData);
-
-                        //Каждая ветка дерева содержит результат своего рула
-                        subtree.getValue().result = outputData;
+                //Перебор веток с условиями
+                for(Tree<RuleContainer> subtree : conditionalTrees) {
+                    if(subtree.getValue().condition.getResult())
+                    {
+                        executeRule(subtree, inputData);
 
                         //Формируем список сдедующих деревьев
                         results.add(subtree);
@@ -94,6 +98,20 @@ public class Parser {
 
         //Выполнить сдедующий увовень
         performTree(results);
+    }
+
+    private void executeRule(Tree<RuleContainer> subtree, String inputData) {
+        //Каждая ветка дерева - рул, который нужно выполнить
+        String outputData = subtree.getValue().rule.performRule(inputData);
+
+        if(outputData != null)
+            booleanMap.put(subtree.getValue().id, true);
+
+        //Сохраняем для теста результат каждого рула
+        resultMap.put(subtree.getValue().id, outputData);
+
+        //Каждая ветка дерева содержит результат своего рула
+        subtree.getValue().result = outputData;
     }
 
 }

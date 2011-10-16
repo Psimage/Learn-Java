@@ -21,9 +21,9 @@ public class ParserFindExample {
 		inLine = console.readLine();
 
         RuleNode node1 = parser.addRule(new FindMKP("Hello"), "R1", null);
-        parser.addRule(new FindMKP("o"), "R2", node1, null);
+            parser.addRule(new FindMKP("H"), "R4", node1, "!R2 || R1 && R2");
+            parser.addRule(new FindMKP("o"), "R2", node1, null);
             parser.addRule(new FindMKP("lHe=="), "R3", node1, null);
-            parser.addRule(new FindMKP("H"), "R4", node1, "R2 || R3 && R2 ");
 
         Map<String, String> result = parser.Parse(inLine);
 
